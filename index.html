@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개별가정통신문 초안 도우미</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root {
+  --primary: #14b8a6;
+  --primary-strong: #0d9488;
+  --primary-soft: #ccfbf1;
+  --accent: #6366f1;
+
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.5rem;
+  --fs-2xl: 2rem;
+  --fs-3xl: 3rem;
+
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px; --r-full: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.06);
+  --shadow-md: 0 4px 12px rgba(15,23,42,.06), 0 2px 4px rgba(15,23,42,.04);
+
+  --container: 1180px;
+}
+* { box-sizing: border-box; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+body {
+  margin: 0;
+  font-family: Pretendard, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-soft); border-radius: var(--r-sm); }
+
+.wrap { max-width: var(--container); margin: 0 auto; padding: 0 var(--sp-4) var(--sp-16); }
+
+.privacy-banner {
+  background: var(--primary);
+  color: #fff;
+  text-align: center;
+  padding: var(--sp-3) var(--sp-4);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+}
+.privacy-banner span { opacity: .92; font-weight: 500; }
+
+.app-header { padding: var(--sp-12) 0 var(--sp-8); text-align: center; }
+.app-header h1 { font-size: var(--fs-2xl); font-weight: 800; margin: 0 0 var(--sp-2); line-height: 1.25; }
+.app-header p { color: var(--text-muted); margin: 0; font-size: var(--fs-base); }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: var(--shadow-sm); padding: var(--sp-6); }
+.card + .card { margin-top: var(--sp-8); }
+.card h2 { font-size: var(--fs-lg); font-weight: 700; margin: 0 0 var(--sp-1); }
+.card .card-desc { color: var(--text-muted); font-size: var(--fs-sm); margin: 0 0 var(--sp-4); }
+
+.row { display: flex; gap: var(--sp-4); flex-wrap: wrap; align-items: flex-end; }
+.field { flex: 1 1 220px; min-width: 0; }
+.field label { display: block; font-weight: 600; font-size: var(--fs-sm); margin-bottom: var(--sp-2); }
+.field .hint { display: block; font-weight: 400; color: var(--text-subtle); font-size: var(--fs-xs); margin-top: var(--sp-1); }
+
+.input, textarea.input {
+  width: 100%; min-height: 44px; padding: 0 var(--sp-4);
+  border: 1px solid var(--border); border-radius: var(--r-sm); font-size: var(--fs-base); font-family: inherit; color: var(--text);
+}
+textarea.input { min-height: 90px; padding: var(--sp-3) var(--sp-4); resize: vertical; }
+.input:focus, textarea.input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+
+.btn { min-height: 44px; padding: 0 var(--sp-6); border: 0; border-radius: var(--r-md); background: var(--primary); color: #fff; font-size: var(--fs-base); font-weight: 600; cursor: pointer; transition: background .15s, transform .05s; white-space: nowrap; }
+.btn:hover { background: var(--primary-strong); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { background: var(--text-subtle); cursor: not-allowed; transform: none; }
+.btn--ghost { background: transparent; color: var(--primary); box-shadow: inset 0 0 0 1px var(--border); }
+.btn--ghost:hover { background: var(--primary-soft); }
+.btn--sm { min-height: 34px; padding: 0 var(--sp-4); font-size: var(--fs-sm); border-radius: var(--r-sm); }
+.btn--danger { background: transparent; color: var(--danger); box-shadow: inset 0 0 0 1px var(--border); }
+.btn--danger:hover { background: #fee2e2; }
+
+.badge { display: inline-flex; align-items: center; gap: var(--sp-1); padding: var(--sp-1) var(--sp-3); border-radius: var(--r-full); background: var(--primary-soft); color: var(--primary-strong); font-size: var(--fs-xs); font-weight: 600; }
+.badge--muted { background: #f1f5f9; color: var(--text-subtle); }
+
+.cost-note { margin-top: var(--sp-3); font-size: var(--fs-xs); color: var(--text-subtle); }
+
+.table-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--r-sm); }
+table.roster { width: 100%; border-collapse: collapse; min-width: 900px; }
+table.roster th { text-align: left; font-size: var(--fs-xs); color: var(--text-muted); font-weight: 700; padding: var(--sp-3); background: var(--bg); border-bottom: 1px solid var(--border); white-space: nowrap; }
+table.roster td { border-bottom: 1px solid var(--border); vertical-align: top; padding: 0; }
+table.roster td[contenteditable="true"] { padding: var(--sp-2) var(--sp-3); font-size: var(--fs-sm); min-width: 120px; white-space: pre-wrap; word-break: break-word; }
+table.roster td[contenteditable="true"]:focus { outline: none; background: var(--primary-soft); }
+table.roster td[contenteditable="true"]:empty::before { content: attr(data-placeholder); color: var(--text-subtle); }
+table.roster td.col-no { min-width: 56px; text-align: center; }
+table.roster td.col-name { min-width: 90px; font-weight: 600; }
+table.roster td.col-result { padding: var(--sp-2) var(--sp-3); font-size: var(--fs-xs); color: var(--text-muted); max-width: 220px; }
+table.roster td.col-actions { padding: var(--sp-2) var(--sp-3); white-space: nowrap; }
+table.roster td.col-actions .btn--sm { margin-right: var(--sp-2); }
+
+.paste-hint { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); font-size: var(--fs-sm); color: var(--text-muted); }
+.toolbar { display: flex; gap: var(--sp-3); flex-wrap: wrap; margin-top: var(--sp-4); }
+
+.overlay { position: fixed; inset: 0; background: rgba(15,23,42,.55); display: flex; align-items: center; justify-content: center; padding: var(--sp-4); z-index: 50; }
+.overlay[hidden] { display: none; }
+.overlay-card { background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow-md); max-width: 640px; width: 100%; padding: var(--sp-8); }
+.overlay-card .progress { font-size: var(--fs-sm); color: var(--text-muted); font-weight: 600; margin-bottom: var(--sp-2); }
+.overlay-card h3 { font-size: var(--fs-xl); font-weight: 800; margin: 0 0 var(--sp-4); }
+.overlay-card textarea { width: 100%; min-height: 220px; padding: var(--sp-4); border: 1px solid var(--border); border-radius: var(--r-sm); font-size: var(--fs-base); font-family: inherit; line-height: 1.7; resize: vertical; }
+.overlay-card textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.overlay-actions { display: flex; gap: var(--sp-3); margin-top: var(--sp-4); flex-wrap: wrap; }
+.overlay-nav { display: flex; justify-content: space-between; margin-top: var(--sp-6); }
+
+.status-line { font-size: var(--fs-sm); font-weight: 600; margin-top: var(--sp-3); min-height: 1.4em; }
+.status-line.error { color: var(--danger); }
+.status-line.ok { color: var(--primary-strong); }
+
+.warn-box { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: var(--r-sm); padding: var(--sp-3) var(--sp-4); font-size: var(--fs-sm); margin-bottom: var(--sp-4); }
+</style>
+</head>
+<body>
+
+<div class="privacy-banner">🔒 교직원 전용 · 학생 이름은 AI로 전송되지 않습니다 · 모든 데이터는 이 브라우저에만 저장됩니다</div>
+
+<div class="wrap">
+  <header class="app-header">
+    <h1>개별가정통신문 초안 도우미</h1>
+    <p>학생별 성향·진로·상담·성적 메모로 학기말 개별가정통신문 문구 초안을 생성합니다. 생성된 문구는 반드시 검토 후 나이스에 직접 입력하세요.</p>
+  </header>
+
+  <section class="card">
+    <h2>1. OpenAI API 키</h2>
+    <p class="card-desc">본인 명의 API 키를 사용합니다(포털 운영자 비용 아님). 키는 서버로 전송되지 않고 이 브라우저에만 저장됩니다.</p>
+    <div class="row">
+      <div class="field" style="flex: 2 1 320px;">
+        <label for="apiKey">API 키</label>
+        <input type="password" id="apiKey" class="input" placeholder="sk-...">
+        <span class="hint"><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>에서 발급</span>
+      </div>
+      <div class="field" style="flex: 1 1 160px;">
+        <label for="model">모델</label>
+        <input type="text" id="model" class="input" value="gpt-4o-mini">
+        <span class="hint">저렴한 모델 기본값. 필요시 변경 가능</span>
+      </div>
+    </div>
+    <p class="cost-note">학생 1명당 문구 생성은 약 300~500 토큰 수준이라, 저가 모델 기준 학급 전체(30명)를 생성해도 비용은 대략 몇십 원 이내입니다. 정확한 요금은 OpenAI 대시보드에서 확인하세요.</p>
+  </section>
+
+  <section class="card">
+    <h2>2. 학급 공통 정보</h2>
+    <p class="card-desc">전체 학생에게 공통으로 들어갈 학사일정·유의사항입니다(방학식/개학일 등).</p>
+    <textarea id="calendarText" class="input" placeholder="예: 여름방학은 7/22(수)부터 8/17(월)까지이며, 2학기 개학일은 8/18(화)입니다. 방학 중 안전사고에 유의하시기 바랍니다."></textarea>
+  </section>
+
+  <section class="card">
+    <h2>3. 학생별 정보</h2>
+    <p class="card-desc">기존에 가지고 계신 성향·상담 메모, 성적표를 형식 그대로 붙여넣으세요. 이름은 AI로 전송되지 않습니다.</p>
+    <div class="paste-hint">💡 엑셀에서 표를 복사한 뒤 아무 칸이나 클릭하고 <b>Ctrl+V</b>로 붙여넣으면 표가 한 번에 채워집니다.</div>
+    <div class="table-scroll">
+      <table class="roster" id="rosterTable">
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>이름</th>
+            <th>성향·진로 메모</th>
+            <th>상담 특이사항</th>
+            <th>성적 요약</th>
+            <th>생성 결과</th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody id="rosterBody"></tbody>
+      </table>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn--ghost" id="addRowBtn">+ 학생 추가</button>
+      <button class="btn" id="generateAllBtn">전체 학생 문구 생성</button>
+      <button class="btn btn--ghost" id="openHelperBtn">나이스 입력 도우미 열기</button>
+      <button class="btn btn--danger" id="resetBtn">전체 초기화</button>
+    </div>
+    <div class="status-line" id="statusLine"></div>
+  </section>
+</div>
+
+<div class="overlay" id="helperOverlay" hidden>
+  <div class="overlay-card">
+    <div class="warn-box">이 화면의 문구는 AI 초안입니다. 내용을 확인·수정한 뒤 나이스 개별가정통신문 칸에 직접 붙여넣으세요.</div>
+    <div class="progress" id="helperProgress">0 / 0</div>
+    <h3 id="helperName">-</h3>
+    <textarea id="helperText"></textarea>
+    <div class="overlay-actions">
+      <button class="btn" id="helperCopyBtn">복사하기</button>
+      <button class="btn btn--ghost" id="helperCloseBtn">닫기</button>
+    </div>
+    <div class="overlay-nav">
+      <button class="btn btn--ghost btn--sm" id="helperPrevBtn">← 이전 학생</button>
+      <button class="btn btn--ghost btn--sm" id="helperNextBtn">다음 학생 →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'reportLetterHelper.v1';
+const COLS = ['no', 'name', 'trait', 'counsel', 'score'];
+const PLACEHOLDERS = { no: '1', name: '홍길동', trait: '성실하고 리더십 있음, 과학자 희망', counsel: '교우관계 개선됨', score: '국어 92, 수학 78, 영어 85' };
+
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { apiKey: '', model: 'gpt-4o-mini', calendarText: '', students: [] };
+}
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+const $apiKey = document.getElementById('apiKey');
+const $model = document.getElementById('model');
+const $calendarText = document.getElementById('calendarText');
+const $rosterBody = document.getElementById('rosterBody');
+const $statusLine = document.getElementById('statusLine');
+
+$apiKey.value = state.apiKey || '';
+$model.value = state.model || 'gpt-4o-mini';
+$calendarText.value = state.calendarText || '';
+
+$apiKey.addEventListener('input', () => { state.apiKey = $apiKey.value; saveState(); });
+$model.addEventListener('input', () => { state.model = $model.value; saveState(); });
+$calendarText.addEventListener('input', () => { state.calendarText = $calendarText.value; saveState(); });
+
+function newStudent(fields) {
+  const nextNo = (Math.max(0, ...state.students.map(s => parseInt(s.no) || 0)) + 1);
+  return Object.assign({ no: String(nextNo), name: '', trait: '', counsel: '', score: '', draft: '' }, fields || {});
+}
+
+function renderRoster() {
+  $rosterBody.innerHTML = '';
+  state.students.forEach((s, idx) => {
+    const tr = document.createElement('tr');
+    tr.dataset.idx = idx;
+
+    COLS.forEach(col => {
+      const td = document.createElement('td');
+      td.contentEditable = 'true';
+      td.dataset.field = col;
+      td.dataset.placeholder = PLACEHOLDERS[col];
+      td.className = col === 'no' ? 'col-no' : (col === 'name' ? 'col-name' : '');
+      td.textContent = s[col] || '';
+      td.addEventListener('input', () => {
+        state.students[idx][col] = td.textContent;
+        saveState();
+      });
+      tr.appendChild(td);
+    });
+
+    const tdResult = document.createElement('td');
+    tdResult.className = 'col-result';
+    if (s.draft) {
+      tdResult.innerHTML = '<span class="badge">초안 있음</span> ' + escapeHtml(s.draft.slice(0, 30)) + (s.draft.length > 30 ? '…' : '');
+    } else {
+      tdResult.innerHTML = '<span class="badge badge--muted">미생성</span>';
+    }
+    tr.appendChild(tdResult);
+
+    const tdActions = document.createElement('td');
+    tdActions.className = 'col-actions';
+    const genBtn = document.createElement('button');
+    genBtn.className = 'btn btn--sm btn--ghost';
+    genBtn.textContent = s.draft ? '재생성' : '생성';
+    genBtn.addEventListener('click', () => generateOne(idx, genBtn));
+    tdActions.appendChild(genBtn);
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn btn--sm btn--danger';
+    delBtn.textContent = '삭제';
+    delBtn.addEventListener('click', () => {
+      state.students.splice(idx, 1);
+      saveState();
+      renderRoster();
+    });
+    tdActions.appendChild(delBtn);
+    tr.appendChild(tdActions);
+
+    $rosterBody.appendChild(tr);
+  });
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+document.getElementById('addRowBtn').addEventListener('click', () => {
+  state.students.push(newStudent());
+  saveState();
+  renderRoster();
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (!confirm('입력한 모든 학생 정보와 생성된 문구가 삭제됩니다. 계속할까요?')) return;
+  state.students = [];
+  saveState();
+  renderRoster();
+});
+
+// 엑셀 붙여넣기: 표 안 아무 칸에서 붙여넣으면 탭/줄바꿈 기준으로 여러 칸에 자동 채움
+$rosterBody.addEventListener('paste', (e) => {
+  const target = e.target.closest('td[contenteditable="true"]');
+  if (!target) return;
+  const text = (e.clipboardData || window.clipboardData).getData('text');
+  if (!text.includes('\t') && !text.includes('\n')) return; // 단일 값은 기본 붙여넣기 동작 사용
+  e.preventDefault();
+
+  const startRow = parseInt(target.closest('tr').dataset.idx, 10);
+  const startCol = COLS.indexOf(target.dataset.field);
+  const lines = text.replace(/\r/g, '').split('\n').filter((line, i, arr) => !(i === arr.length - 1 && line === ''));
+
+  lines.forEach((line, i) => {
+    const cells = line.split('\t');
+    const rowIdx = startRow + i;
+    while (state.students.length <= rowIdx) state.students.push(newStudent());
+    cells.forEach((val, j) => {
+      const col = COLS[startCol + j];
+      if (col) state.students[rowIdx][col] = val.trim();
+    });
+  });
+
+  saveState();
+  renderRoster();
+});
+
+renderRoster();
+
+// ---- AI 생성 ----
+const SYSTEM_PROMPT = `당신은 중학교 담임교사가 학기말 성적통지표에 함께 발송하는 개별가정통신문 문구를 작성하도록 돕는 도우미입니다.
+- 학부모님께 보내는 정중한 존댓말 문체로, 3~5문장 정도의 한 문단으로 작성합니다.
+- 제공된 사실 정보만 근거로 사용하고, 없는 내용을 지어내지 않습니다.
+- 학생 이름은 제공되지 않습니다. 이름이 들어갈 자리가 필요하면 문장 맨 앞에 정확히 "{{이름}}" 토큰을 한 번만 사용하세요(예: "{{이름}} 학생은 ...").
+- 상투적인 미사여구를 줄이고 구체적인 근거 중심으로 서술합니다.
+- 개선이 필요한 내용은 단점을 나열하기보다 격려와 함께 완곡하게 표현합니다.
+- 결과는 문단 텍스트만 출력하고, 제목이나 따옴표, 부가 설명을 붙이지 않습니다.`;
+
+function buildUserPrompt(s) {
+  return [
+    `[학급 공통 학사일정]\n${state.calendarText || '(없음)'}`,
+    `[학생 성향·진로 메모]\n${s.trait || '(없음)'}`,
+    `[상담 특이사항]\n${s.counsel || '(없음)'}`,
+    `[성적 요약]\n${s.score || '(없음)'}`
+  ].join('\n\n');
+}
+
+async function callOpenAI(userPrompt) {
+  if (!state.apiKey) throw new Error('API 키를 먼저 입력하세요.');
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${state.apiKey}`
+    },
+    body: JSON.stringify({
+      model: state.model || 'gpt-4o-mini',
+      temperature: 0.7,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: userPrompt }
+      ]
+    })
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `요청 실패 (${res.status})`);
+  }
+  const data = await res.json();
+  return data.choices?.[0]?.message?.content?.trim() || '';
+}
+
+async function generateOne(idx, btn) {
+  const s = state.students[idx];
+  if (btn) { btn.disabled = true; btn.textContent = '생성 중…'; }
+  $statusLine.className = 'status-line';
+  $statusLine.textContent = '';
+  try {
+    const raw = await callOpenAI(buildUserPrompt(s));
+    s.draft = raw.split('{{이름}}').join(s.name || '');
+    saveState();
+    renderRoster();
+  } catch (e) {
+    $statusLine.className = 'status-line error';
+    $statusLine.textContent = `${s.name || s.no}번 학생 생성 실패: ${e.message}`;
+    if (btn) { btn.disabled = false; btn.textContent = s.draft ? '재생성' : '생성'; }
+  }
+}
+
+document.getElementById('generateAllBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('generateAllBtn');
+  btn.disabled = true;
+  for (let i = 0; i < state.students.length; i++) {
+    $statusLine.className = 'status-line';
+    $statusLine.textContent = `생성 중… (${i + 1} / ${state.students.length})`;
+    try {
+      await generateOne(i, null);
+    } catch (e) {}
+  }
+  $statusLine.className = 'status-line ok';
+  $statusLine.textContent = '전체 생성 완료. 각 문구를 검토 후 나이스 입력 도우미로 복사하세요.';
+  btn.disabled = false;
+});
+
+// ---- 나이스 입력 도우미 (순서대로 복사) ----
+const $overlay = document.getElementById('helperOverlay');
+const $helperProgress = document.getElementById('helperProgress');
+const $helperName = document.getElementById('helperName');
+const $helperText = document.getElementById('helperText');
+let helperList = [];
+let helperIdx = 0;
+
+function openHelper() {
+  helperList = state.students
+    .map((s, idx) => ({ s, idx }))
+    .filter(x => x.s.draft)
+    .sort((a, b) => (parseInt(a.s.no) || 0) - (parseInt(b.s.no) || 0));
+  if (helperList.length === 0) {
+    alert('생성된 문구가 없습니다. 먼저 학생 문구를 생성하세요.');
+    return;
+  }
+  helperIdx = 0;
+  showHelperItem();
+  $overlay.hidden = false;
+}
+
+function showHelperItem() {
+  const item = helperList[helperIdx];
+  $helperProgress.textContent = `${helperIdx + 1} / ${helperList.length}`;
+  $helperName.textContent = `${item.s.no}번 ${item.s.name || '(이름 없음)'}`;
+  $helperText.value = item.s.draft;
+}
+
+$helperText.addEventListener('input', () => {
+  const item = helperList[helperIdx];
+  item.s.draft = $helperText.value;
+  state.students[item.idx].draft = $helperText.value;
+  saveState();
+});
+
+document.getElementById('openHelperBtn').addEventListener('click', openHelper);
+document.getElementById('helperCloseBtn').addEventListener('click', () => { $overlay.hidden = true; renderRoster(); });
+document.getElementById('helperCopyBtn').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText($helperText.value);
+    const btn = document.getElementById('helperCopyBtn');
+    const orig = btn.textContent;
+    btn.textContent = '복사됨!';
+    setTimeout(() => { btn.textContent = orig; }, 1200);
+  } catch (e) {
+    alert('클립보드 복사에 실패했습니다. 직접 선택해서 복사하세요.');
+  }
+});
+document.getElementById('helperPrevBtn').addEventListener('click', () => {
+  helperIdx = (helperIdx - 1 + helperList.length) % helperList.length;
+  showHelperItem();
+});
+document.getElementById('helperNextBtn').addEventListener('click', () => {
+  helperIdx = (helperIdx + 1) % helperList.length;
+  showHelperItem();
+});
+</script>
+</body>
+</html>
